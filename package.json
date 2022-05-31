@@ -1,8 +1,21 @@
 {
   "name": "api-to-hasura",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/index.js",
   "repository": "https://github.com/arabovs/api-to-hasura.git",
   "author": "arabovs <arabov.simeon1990@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node api/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.6.6",
+    "cross-fetch": "^3.1.5",
+    "graphql": "^16.5.0",
+    "node-fetch": "^3.2.4",
+    "request": "^2.88.2"
+  }
 }
