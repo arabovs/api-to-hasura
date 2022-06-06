@@ -2,48 +2,44 @@ require("cross-fetch/polyfill");
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
 const express = require("express");
 const fetch = require("cross-fetch");
-const request = require("request");
-const app = express();
-const port = 3000;
+const https = require("https");
+const app = require("express")();
 const bodyParser = require("body-parser");
+const port = 3001;
+const axios = require("axios");
+
 const client = new ApolloClient({
   uri: "https://arabovs-api.hasura.app/v1/graphql",
   fetch: fetch,
   cache: new InMemoryCache(),
+  headers: {
+    "content-typefrom": "application/json",
+    "x-hasura-admin-secret":
+      "6NIm5o8FZvg47gwR5ef1wWPJZjEBRbeUwr5GPKdC0SVtkDM4BGbOjxtnnomAmFjJ",
+  },
 });
 
-app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+console.log(client.mutate);
 const endPointCall = (req, res) => {
-  console.log(req);
-  console.log(res.post);
-  console.log("haha");
+  console.log(req.body);
   client
-    .mutation({
+    .mutate({
       mutation: gql`
-        mutation GetRates {
-          api_writes(objects: { input: res.post }) {
+        mutation GetRates($input: String) {
+          insert_api_writes(objects: { input: $input }) {
             affected_rows
           }
         }
       `,
+      variables: {
+        input: req.body.a,
+      },
     })
     .then((result) => console.log(result));
-  res.json(data);
+  res.json(req.body);
 };
-
-var myJSONObject = {};
-request(
-  {
-    url: "http://localhost:3000/d",
-    method: "POST",
-    json: true, // <--Very important!!!
-    body: myJSONObject,
-  },
-  function (error, response, body) {
-    console.log(response);
-  }
-);
 
 app.post("/c/", endPointCall);
 
