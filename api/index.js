@@ -21,7 +21,6 @@ const client = new ApolloClient({
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-console.log(client.mutate);
 const endPointCall = (req, res) => {
   console.log(req.body);
   client
@@ -43,8 +42,17 @@ const endPointCall = (req, res) => {
 
 app.post("/c/", endPointCall);
 
-app.get("/", (req, res) => {
-  res.send("Please enter api query");
+app.get("/", async (req, res) => {
+  const data = await client.query({
+    query: gql`
+      query MyQuery {
+        api_writes(limit: 1) {
+          input
+        }
+      }
+    `,
+  });
+  res.send(data.data.api_writes[0].input);
 });
 
 app.listen(port, () => {
