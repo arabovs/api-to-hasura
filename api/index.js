@@ -2,11 +2,9 @@ require("cross-fetch/polyfill");
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
 const express = require("express");
 const fetch = require("cross-fetch");
-const https = require("https");
 const app = require("express")();
 const bodyParser = require("body-parser");
 const port = 3001;
-const axios = require("axios");
 
 const client = new ApolloClient({
   uri: "https://arabovs-api.hasura.app/v1/graphql",
@@ -40,7 +38,7 @@ const endPointCall = (req, res) => {
   res.json(req.body);
 };
 
-app.post("/c/", endPointCall);
+app.post("/post/", endPointCall);
 
 app.get("/", async (req, res) => {
   const data = await client.query({
